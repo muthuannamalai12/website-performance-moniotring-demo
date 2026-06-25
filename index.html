@@ -892,11 +892,14 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-mosaic">
-      <div class="mosaic-tile"><div class="tile-img">✦</div></div>
-      <div class="mosaic-tile"><div class="tile-img t2">◇</div></div>
-      <div class="mosaic-tile"><div class="tile-img t3">◈</div></div>
-    </div>
+    <!-- LCP element: large hero image -->
+    <img
+      id="lcp-hero"
+      src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=80"
+      alt="Lumière Summer Collection — model in linen coat"
+      fetchpriority="high"
+      style="width:100%;height:100%;object-fit:cover;display:block;"
+    />
     <div class="hero-badge">
       New this week
       <strong>42 pieces</strong>
@@ -953,8 +956,14 @@
 
 <!-- FEATURED PRODUCT -->
 <section id="featured">
-  <div class="featured-visual">
-    <span class="featured-label">Editor's Pick</span>
+  <div class="featured-visual" style="position:relative;">
+    <img
+      src="https://images.unsplash.com/photo-1594938298603-c8148c4b4ed2?w=900&q=80"
+      alt="Atelier Linen Coat"
+      loading="lazy"
+      style="width:100%;height:100%;object-fit:cover;display:block;"
+    />
+    <span class="featured-label" style="position:absolute;top:1.5rem;left:1.5rem;">Editor's Pick</span>
   </div>
   <div class="featured-content">
     <p class="section-label">New Arrival</p>
@@ -983,7 +992,7 @@
   <h2 class="section-title">Trending <em>Now</em></h2>
   <div class="trending-grid">
     <div class="trend-card">
-      <div class="trend-img ti1"></div>
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=75" alt="Relaxed Silk Cami" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;" />
       <div class="trend-body">
         <p class="trend-cat">Tops</p>
         <h3 class="trend-name">Relaxed Silk Cami</h3>
@@ -992,7 +1001,7 @@
       </div>
     </div>
     <div class="trend-card">
-      <div class="trend-img ti2"></div>
+      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=75" alt="Wide-Leg Crepe Pant" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;" />
       <div class="trend-body">
         <p class="trend-cat">Trousers</p>
         <h3 class="trend-name">Wide-Leg Crepe Pant</h3>
@@ -1001,7 +1010,7 @@
       </div>
     </div>
     <div class="trend-card">
-      <div class="trend-img ti3"></div>
+      <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=75" alt="Slip Maxi Dress" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;" />
       <div class="trend-body">
         <p class="trend-cat">Dresses</p>
         <h3 class="trend-name">Slip Maxi Dress</h3>
@@ -1148,6 +1157,37 @@
       document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     });
+  });
+
+  // INP: filter interaction on collections — forces style recalc on click
+  document.querySelectorAll('.collection-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.collection-card').forEach(c => {
+        c.style.opacity = '0.4';
+        c.style.transform = 'scale(0.97)';
+      });
+      this.style.opacity = '1';
+      this.style.transform = 'scale(1)';
+      // Force layout recalc to make INP measurable
+      void this.offsetHeight;
+      setTimeout(() => {
+        document.querySelectorAll('.collection-card').forEach(c => {
+          c.style.opacity = '';
+          c.style.transform = '';
+        });
+      }, 600);
+    });
+  });
+
+  // CLS: inject a late-loading banner after 2s to cause layout shift
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const banner = document.createElement('div');
+      banner.id = 'cls-banner';
+      banner.innerHTML = '🔥 <strong>Flash Sale:</strong> Extra 20% off all linen styles today only — <a href="/sale/summer-2026" style="color:var(--blush);text-decoration:underline">Shop Now</a>';
+      banner.style.cssText = 'background:var(--accent);color:#fff;text-align:center;padding:0.75rem 1rem;font-size:0.85rem;letter-spacing:0.04em;position:relative;z-index:50;';
+      document.body.insertBefore(banner, document.body.firstChild);
+    }, 2000);
   });
 </script>
 </body>
